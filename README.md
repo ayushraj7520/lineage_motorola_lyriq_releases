@@ -41,9 +41,10 @@ Flashing the OTA `.zip` via Recovery automatically creates/resizes all dynamic l
 Power off the phone, then hold **Volume Down + Power** to enter Bootloader (`fastboot`) mode.
 
 ### Step 2: Flash VBMeta & Boot/Recovery Images
+*(Note: `vbmeta.img` is already compiled with `--set_hashtree_disabled_flag` (`Flags: 1`) via `BoardConfig.mk` and signed against this build's images, so `--disable-verity --disable-verification` is not required).*
 ```bash
-fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
-fastboot --disable-verity --disable-verification flash vbmeta_system vbmeta_system.img
+fastboot flash vbmeta vbmeta.img
+fastboot flash vbmeta_system vbmeta_system.img
 fastboot flash boot boot.img
 fastboot flash init_boot init_boot.img
 fastboot flash vendor_boot vendor_boot.img
@@ -81,9 +82,9 @@ adb sideload lineage-22.1-20261022-UNOFFICIAL-lyriq.zip
 
 ### Phase 1: Flash Physical Partitions (in Bootloader `fastboot` Mode)
 ```bash
-# 1. Disable AVB verification on vbmeta and vbmeta_system
-fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
-fastboot --disable-verity --disable-verification flash vbmeta_system vbmeta_system.img
+# 1. Flash VBMeta images (already built with hashtree_disabled flag = 1)
+fastboot flash vbmeta vbmeta.img
+fastboot flash vbmeta_system vbmeta_system.img
 
 # 2. Flash Kernel, Ramdisk, and Vendor Boot (Recovery/fastbootd)
 fastboot flash boot boot.img
